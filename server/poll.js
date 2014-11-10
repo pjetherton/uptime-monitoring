@@ -37,8 +37,10 @@ Meteor.startup(function () {
 				end: {$exists: false}
 			    },
 			    {
-				$setOnInsert: {url: url},
-				$setOnInsert: {start: start},
+				$setOnInsert: {
+				    url: url,
+				    start: start
+				},
 				$inc: {pollCount: 1}
 			    },
 			    {
@@ -66,8 +68,10 @@ Meteor.startup(function () {
 			    start: start
 			},
 			{
-			    $set: {duration: end - start},
-			    $set: {statusCode: statusCode}
+			    $set: {
+				duration: end - start,
+				statusCode: statusCode
+			    }
 			}
 		    );
 
@@ -86,9 +90,11 @@ Meteor.startup(function () {
 			    url: url
 			},
 			{
-			    $set: {statusCode: statusCode},
-			    $set: {time: time},
-			    $set: {duration: end - start}
+			    $set: {
+				statusCode: statusCode,
+			        time: time,
+				duration: end - start
+			    }
 			}
 		    );
 		});
