@@ -4,8 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-insecure
 http
 mrt:cron
 mrt:twilio
-
