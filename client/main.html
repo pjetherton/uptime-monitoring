@@ -1,0 +1,83 @@
+<!-- Copyright (c) 2014 Paul Etherton
+  -->
+
+<head>
+  <title>Uptime Monitoring</title>
+</head>
+
+<body>
+  <section class="container">
+    <hgroup>
+      <h1>Uptime Monitoring</h1>
+    </hgroup>
+
+    <div class="row">
+      <section class="col-xs-12 col-sm-6 col-md-6">
+        {{> urls}}
+      </section>
+      <section class="col-xs-12 col-sm-6 col-md-6">
+	{{> polls}}
+      </section>
+    </div>
+
+    <footer>
+      <p>Copyright &copy; 2014 Paul Etherton</p>
+    </footer>
+  </section>
+</body>
+
+<template name="urls">
+  <h2>URLs</h2>
+  <form>
+    <input type="text" name="url" />
+    <input type="submit" value="Add new URL" />
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+	<th></th>
+	<th>Status</th>
+	<th>URL</th>
+	<th>Poll time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each urls}}
+        <tr>
+	  <td class="remove" id="{{_id}}" style="color:red">&#215;</td>
+	  <td>{{statusCode}}{{#if time}} since {{dateFormat time}}{{/if}}</td>
+	  <td class="url">{{url}}</td>
+	  <td>{{duration}}</td>
+	</tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="polls">
+  <h2>{{# if url}}{{url}}{{else}}Select a URL from the left hand list{{/if}}</h2>
+  <table class="table">
+    <thead>
+      <tr>
+	<th>Start time</th>
+	<th>Duration</th>
+	<th>Status code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each polls}}
+        <tr style={{pollStyle statusCode}}>
+  	  <td>{{dateFormat start}}</td>
+	  <td>
+	    {{#if duration}}
+	      {{duration}}
+	    {{else}}
+	      <img src="/ajaxBall.gif" />
+	    {{/if}}
+	  </td>
+	  <td>{{statusCode}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
