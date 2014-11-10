@@ -10,11 +10,7 @@ Template.mobileSet.events({
 	}
 
 	Meteor.call("setMobile", Meteor.userId(), event.target.mobile.value, function (error, result) {
-	    if (error) {
-		alert(error);
-	    } else {
-		alert(result);
-	    }
+	    // Do nothing.  In the future we should probably have a failure / success message.
 	});
     }
 });
