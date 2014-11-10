@@ -30,16 +30,48 @@ Meteor.startup(function () {
 			var statusCode = result.statusCode;
 		    }
 		    
+		    if (statusCode !== 200) {
+			Downtime.update(
+			    {
+				url: url,
+				end: {$exists: false}
+			    },
+			    {
+				$setOnInsert: {
+				    url: url,
+				    start: start
+				},
+				$inc: {pollCount: 1}
+			    },
+			    {
+				upsert: true
+			    }
+			);
+		    } else {
+			Downtime.update(
+			    {
+				url: url,
+				end: {$exists: false}
+			    },
+			    {
+				$set: {end: start}
+			    },
+			    {
+				upsert: false
+			    }
+			)
+		    }
+
 		    Polls.update(
 			{
 			    url: url,
 			    start: start
 			},
 			{
-			    url: url,
-			    start: start,
-			    duration: end - start,
-			    statusCode: statusCode
+			    $set: {
+				duration: end - start,
+				statusCode: statusCode
+			    }
 			}
 		    );
 
@@ -49,17 +81,20 @@ Meteor.startup(function () {
 
 		    var time = urlRecord.statusCode === statusCode && urlRecord.time ?
 			urlRecord.time :
-			(start > urlRecord.time ? start : urlRecord.time);
+			((!urlRecord.time || (start > urlRecord.time)) ?
+			 start :
+			 urlRecord.time);
 
 		    URLs.update(
 			{
 			    url: url
 			},
 			{
-			    url: url,
-			    statusCode: statusCode,
-			    time: time,
-			    duration: end - start
+			    $set: {
+				statusCode: statusCode,
+			        time: time,
+				duration: end - start
+			    }
 			}
 		    );
 		});
