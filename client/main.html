@@ -7,6 +7,8 @@
 
 <body>
   <section class="container">
+    <div class="row">{{> loginButtons}}{{> mobileSet}}</div>
+
     <hgroup>
       <h1>Uptime Monitoring</h1>
     </hgroup>
@@ -80,4 +82,15 @@
       {{/each}}
     </tbody>
   </table>
+</template>
+
+<template name="mobileSet">
+  {{#if currentUser}}
+    {{#with currentUser}}
+      <form>
+	<input type="text" name="mobile" value="{{profile.mobile}}" />
+	<input type="submit" name="submit" value="Update mobile number" />
+      </form>
+    {{/with}}
+  {{/if}}
 </template>
