@@ -33,8 +33,10 @@ Meteor.startup(function () {
 		    if (statusCode !== 200) {
 			Downtime.update(
 			    {
-				url: url,
-				end: {$exists: false}
+				$and: [
+				    {url: url},
+				    {end: {$exists: false}}
+				]
 			    },
 			    {
 				$setOnInsert: {
@@ -50,8 +52,10 @@ Meteor.startup(function () {
 		    } else {
 			Downtime.update(
 			    {
-				url: url,
-				end: {$exists: false}
+				$and: [
+				    {url: url},
+				    {end: {$exists: false}}
+				]
 			    },
 			    {
 				$set: {end: start}
