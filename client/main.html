@@ -13,6 +13,7 @@
       <h1>Uptime Monitoring</h1>
     </hgroup>
 
+{{#if currentUser}}
     <div class="row">
       <section class="col-xs-12 col-sm-6 col-md-6">
         {{> urls}}
@@ -21,7 +22,11 @@
 	{{> polls}}
       </section>
     </div>
-
+{{else}}
+    <div class="row">
+      <h2>Please log in</h2>
+    </div>
+{{/if}}
     <footer>
     </footer>
   </section>
