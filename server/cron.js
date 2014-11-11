@@ -31,10 +31,12 @@ Meteor.startup(function () {
 		    }
 
 		    if (statusCode === 200) {
-			statusCode = /<html>/.test(result.content) ? 200 : -3;
-			statusCode = /<html>.*<html>/.test(result.content) ? -2 : statusCode;
+			if (/text\/html/.test(result.headers["Content-Type"])) {
+			    statusCode = /<html.*?>/.test(result.content) ? 200 : -3;
+			    statusCode = /<html.*?>.*<html.*?>/.test(result.content) ? -2 : statusCode;
+			}
 		    }
-		    
+
 		    if (statusCode !== 200) {
 			Downtime.update(
 			    {
