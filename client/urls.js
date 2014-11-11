@@ -3,7 +3,16 @@
 
 var statusCodeMangle = function (statusCode) {
     var result = statusCode || -1;
-    return result === -1 ? 1000 : result;
+    switch (result) {
+    case -1:
+	return 1000;
+    case -2:
+	return 390;
+    case -3:
+	return 389;
+    default:
+	return result;
+    }
 }
 
 Template.urls.helpers({
