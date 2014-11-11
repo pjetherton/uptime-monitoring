@@ -31,9 +31,9 @@ Meteor.startup(function () {
 		    }
 
 		    if (statusCode === 200) {
-			if (/text\/html/.test(result.headers["Content-Type"])) {
+			if (/text\/html/.test(result.headers["content-type"])) {
 			    statusCode = /<html.*?>/.test(result.content) ? 200 : -3;
-			    statusCode = /<html.*?>.*<html.*?>/.test(result.content) ? -2 : statusCode;
+			    statusCode = /<html.*?>[^]*<html.*?>/.test(result.content) ? -2 : statusCode;
 			}
 		    }
 
