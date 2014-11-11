@@ -27,7 +27,12 @@ Meteor.startup(function () {
 		    var statusCode = -1;
 		    
 		    if (result) {
-			var statusCode = result.statusCode;
+			statusCode = result.statusCode;
+		    }
+
+		    if (statusCode === 200) {
+			statusCode = /<html>/.test(result.content) ? 200 : -3;
+			statusCode = /<html>.*<html>/.test(result.content) ? -2 : statusCode;
 		    }
 		    
 		    if (statusCode !== 200) {
