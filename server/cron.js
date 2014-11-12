@@ -4,14 +4,15 @@
 Meteor.startup(function () {
 
     var poll = function () {
-	
+	console.log("Polling...");
 	var urls = URLs.find().fetch();
 	
 	for (var i = 0; i < urls.length; i++) {
 	    
 	    var url = urls[i];
+	    console.log("Polling "+ url.url);
 	    var start = new Date();
-	    
+
 	    // Insert a record before the poll starts.  This way we have a record
 	    // that we tried to poll even if it just hangs forever.  This also
 	    // allows us to find things that are being polled now.
@@ -111,12 +112,67 @@ Meteor.startup(function () {
 		});
 	    })(start, url.url);
 	}
+	console.log("Polled.");
     }
-    
+
+    var notify = function () {
+	console.log("Notifying...");
+	var downtimeRecords = Downtime.find({
+	    end: {$exists: false}
+	}).fetch();
+
+	for (var i = 0; i < downtimeRecords.length; i++) {
+	    var downtimeRecord = downtimeRecords[i];
+
+	    var url = URLs.findOne({
+		url: downtimeRecord.url
+	    });
+
+	    if (!url) {
+		continue;
+	    }
+
+	    if (url.lastNotified && url.lastNotified > downtimeRecord.start) {
+		continue;
+	    }
+
+	    var users = Meteor.users.find({}).fetch();
+
+	    var twilioClient = Twilio(
+		Meteor.settings["Twilio"]["Account_SID"],
+		Meteor.settings["Twilio"]["Auth_Token"]
+	    );
+
+	    for (var j = 0; j < users.length; j++) {
+		var user = users[j];
+		if (user.profile && user.profile.mobile) {
+		    twilioClient.sendSms({
+			to: user.profile.mobile,
+			from: Meteor.settings["Twilio"]["From_Number"],
+			body: "Unfortunately, " + downtimeRecord.url + " appears to have gone down."
+		    });
+		}
+	    }
+	    
+	    URLs.update(
+		{
+		    url: downtimeRecord.url
+		},
+		{
+		    $set: {lastNotified: new Date()}
+		}
+	    );
+	}
+	console.log("Notified.");
+    }
+
     var cron = new Meteor.Cron({
 	events: {
 	    // Every minute
-	    "* * * * *": poll
+	    "* * * * *": function() {
+		poll();
+		notify();
+	    }
 	}
     });
 });
