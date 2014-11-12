@@ -121,7 +121,7 @@ Meteor.startup(function () {
 		url: downtimeRecord.url
 	    });
 
-	    if (url.lastNotified && url.lastNotified > downtimeRecord.start) {
+	    if (url && url.lastNotified && url.lastNotified > downtimeRecord.start) {
 		continue;
 	    }
 
