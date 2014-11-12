@@ -149,7 +149,7 @@ Meteor.startup(function () {
 		    twilioClient.sendSms({
 			to: user.profile.mobile,
 			from: Meteor.settings["Twilio"]["From_Number"],
-			body: "Unfortunately, " + downtimeRecord.url + " appears to have gone down."
+			body: "Unfortunately, " + downtimeRecord.url + " appears to have gone down.  Visit " + Meteor.absoluteUrl() + " for up to date information."
 		    });
 		}
 	    }
