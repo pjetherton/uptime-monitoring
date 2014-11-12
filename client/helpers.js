@@ -11,3 +11,7 @@ Template.registerHelper("dateFormat", function (date) {
 	return date.toLocaleDateString();
     }
 });
+
+Template.registerHelper("pollStyle", function (statusCode) {
+    return (statusCode && statusCode !== 200) ? "color: red; background: pink" : "";
+});

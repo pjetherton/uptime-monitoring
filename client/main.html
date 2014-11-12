@@ -49,7 +49,7 @@
     </thead>
     <tbody>
       {{#each urls}}
-        <tr>
+        <tr style={{pollStyle statusCode}}>
 	  <td class="remove" id="{{_id}}" style="color:red">&#215;</td>
 	  <td>{{statusCode}}{{#if time}} since {{dateFormat time}}{{/if}}</td>
 	  <td class="url">{{url}}</td>
