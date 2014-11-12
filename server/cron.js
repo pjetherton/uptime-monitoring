@@ -129,7 +129,7 @@ Meteor.startup(function () {
 
 	    var twilioClient = Twilio(
 		Meteor.settings["Twilio"]["Account_SID"],
-		Meteor.settings["Twiio"]["Auth_Token"]
+		Meteor.settings["Twilio"]["Auth_Token"]
 	    );
 
 	    for (var j = 0; j < users.length; j++) {
