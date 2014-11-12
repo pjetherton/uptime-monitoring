@@ -162,8 +162,10 @@ Meteor.startup(function () {
     var cron = new Meteor.Cron({
 	events: {
 	    // Every minute
-	    "* * * * *": poll,
-	    "* * * * *": notify
+	    "* * * * *": function() {
+		poll();
+		notify();
+	    }
 	}
     });
 });
