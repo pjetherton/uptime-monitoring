@@ -105,11 +105,59 @@ Meteor.startup(function () {
 	    })(start, url.url);
 	}
     }
-    
+
+    var notify = function () {
+	var yesterday = new Date();
+	yesterday.setDate(yesterday.getDate() - 1);
+
+	var downtimeRecords = Downtime.find({
+	    end: {$exists: false}
+	}).fetch();
+
+	for (var i = 0; i < downtimeRecords.length; i++) {
+	    var downtimeRecord = downtimeRecords;
+
+	    var url = URLs.findOne({
+		url: downtimeRecord.url
+	    });
+
+	    if (url.lastNotified && url.lastNotified > downtimeRecord.start) {
+		continue;
+	    }
+
+	    var users = Meteor.users.find({}).fetch();
+
+	    var twilioClient = Twilio(
+		Meteor.settings["Twilio"]["Account_SID"],
+		Meteor.settings["Twiio"]["Auth_Token"]
+	    );
+
+	    for (var j = 0; j < users.length; j++) {
+		if (users.profile.mobile) {
+		    twilioClient.sendSms({
+			to: users.profile.mobile,
+			from: Meteor.settings["Twilio"]["From_Number"],
+			body: "Unfortunately, " + url.url + " appears to have gone down."
+		    });
+		}
+	    }
+	    
+	    urls.update(
+		{
+		    url: url.url
+		},
+		{
+		    $set: {lastNotified: new Date()}
+		}
+	    );
+	}
+    }
+
     var cron = new Meteor.Cron({
 	events: {
 	    // Every minute
-	    "* * * * *": poll
+	    "* * * * *": poll,
+	    "* * * * *": notify
 	}
     });
 });
