@@ -4,12 +4,13 @@
 Meteor.startup(function () {
 
     var poll = function () {
-	
+	console.log("Polling...");
 	var urls = URLs.find().fetch();
 	
 	for (var i = 0; i < urls.length; i++) {
 	    
 	    var url = urls[i];
+	    console.log("Polling "+ url.url);
 	    var start = new Date();
 
 	    // Insert a record before the poll starts.  This way we have a record
@@ -104,9 +105,11 @@ Meteor.startup(function () {
 		});
 	    })(start, url.url);
 	}
+	console.log("Polled.");
     }
 
     var notify = function () {
+	console.log("Notifying...");
 	var downtimeRecords = Downtime.find({
 	    end: {$exists: false}
 	}).fetch();
@@ -153,6 +156,7 @@ Meteor.startup(function () {
 		}
 	    );
 	}
+	console.log("Notified.");
     }
 
     var cron = new Meteor.Cron({
