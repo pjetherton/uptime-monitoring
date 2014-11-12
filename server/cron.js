@@ -11,7 +11,7 @@ Meteor.startup(function () {
 	    
 	    var url = urls[i];
 	    var start = new Date();
-	    
+
 	    // Insert a record before the poll starts.  This way we have a record
 	    // that we tried to poll even if it just hangs forever.  This also
 	    // allows us to find things that are being polled now.
@@ -115,13 +115,17 @@ Meteor.startup(function () {
 	}).fetch();
 
 	for (var i = 0; i < downtimeRecords.length; i++) {
-	    var downtimeRecord = downtimeRecords;
+	    var downtimeRecord = downtimeRecords[i];
 
 	    var url = URLs.findOne({
 		url: downtimeRecord.url
 	    });
 
-	    if (url && url.lastNotified && url.lastNotified > downtimeRecord.start) {
+	    if (!url) {
+		continue;
+	    }
+
+	    if (url.lastNotified && url.lastNotified > downtimeRecord.start) {
 		continue;
 	    }
 
@@ -133,18 +137,19 @@ Meteor.startup(function () {
 	    );
 
 	    for (var j = 0; j < users.length; j++) {
-		if (users.profile.mobile) {
+		var user = users[j];
+		if (user.profile && user.profile.mobile) {
 		    twilioClient.sendSms({
-			to: users.profile.mobile,
+			to: user.profile.mobile,
 			from: Meteor.settings["Twilio"]["From_Number"],
-			body: "Unfortunately, " + url.url + " appears to have gone down."
+			body: "Unfortunately, " + downtimeRecord.url + " appears to have gone down."
 		    });
 		}
 	    }
 	    
-	    urls.update(
+	    URLs.update(
 		{
-		    url: url.url
+		    url: downtimeRecord.url
 		},
 		{
 		    $set: {lastNotified: new Date()}
