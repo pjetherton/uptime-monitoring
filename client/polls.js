@@ -24,9 +24,5 @@ Template.polls.helpers({
 		)
 	    );
 	}
-    },
-
-    pollStyle: function(statusCode) {
-	return (!statusCode || statusCode === 200) ? "" : "color:red";
     }
 });
