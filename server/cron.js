@@ -107,9 +107,6 @@ Meteor.startup(function () {
     }
 
     var notify = function () {
-	var yesterday = new Date();
-	yesterday.setDate(yesterday.getDate() - 1);
-
 	var downtimeRecords = Downtime.find({
 	    end: {$exists: false}
 	}).fetch();
