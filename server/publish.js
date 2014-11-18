@@ -6,7 +6,12 @@ Meteor.publish("urls", function () {
 });
 
 Meteor.publish("polls", function () {
-    return Polls.find({start: {$gte: new Date(new Date() - (1000 * 60 * 60))}});
+    return Polls.find({
+	$or: [
+	    {start: {$gte: new Date(new Date() - (1000 * 60 * 60))}},
+	    {statusCode: {$ne: 200}}
+	]
+    });
 });
 
 Meteor.publish("downtime", function () {
