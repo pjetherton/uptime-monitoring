@@ -87,6 +87,21 @@ Meteor.startup(function () {
 			}
 		    );
 
+		    if (statusCode != 200) {
+			Polls.update(
+			    {
+				url: url,
+				start: start
+			    },
+			    {
+				$set: {
+				    error: error,
+				    result: result
+				}
+			    }
+			);
+		    }
+
 		    var urlRecord = URLs.findOne({
 			url: url
 		    });
