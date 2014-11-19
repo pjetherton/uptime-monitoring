@@ -133,7 +133,10 @@ Meteor.startup(function () {
     var notify = function () {
 	console.log("Notifying...");
 	var downtimeRecords = Downtime.find({
-	    end: {$exists: false}
+	    $and: [
+		{end: {$exists: false}},
+		{pollCount: {$gte: 2}}
+	    ]
 	}).fetch();
 
 	for (var i = 0; i < downtimeRecords.length; i++) {
