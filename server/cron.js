@@ -139,8 +139,8 @@ Meteor.startup(function () {
 	console.log("Polled.");
     }
 
-    var notify = function () {
-	console.log("Notifying...");
+    var text = function () {
+	console.log("Texting...");
 	var downtimeRecords = Downtime.find({
 	    $and: [
 		{end: {$exists: false}},
@@ -190,7 +190,57 @@ Meteor.startup(function () {
 		}
 	    );
 	}
-	console.log("Notified.");
+	console.log("Texted.");
+    }
+
+    var email = function() {
+	console.log("Emailing...");
+
+	var downtimeRecords = Downtime.find({
+	    end: {$exists: false}
+	}).fetch();
+
+	for (var i = 0; i < downtimeRecords.length; i++) {
+	    var downtimeRecord = downtimeRecords[i];
+
+	    var url = URLs.findOne({
+		url: downtimeRecord.url
+	    });
+
+	    if (!url) {
+		continue;
+	    }
+
+	    if (url.lastEmailed && url.lastEmailed > downtimeRecord.start) {
+		continue;
+	    }
+
+	    var users = Meteor.users.find({}).fetch();
+
+	    for (var j = 0; j < users.length; j++) {
+		var user = users[j];
+		if (user.emails && user.emails.length > 0) {
+		    for (var k = 0; k < user.emails.length; k++) {
+			var emailAddress = user.emails[k].address;
+			Email.send({
+			    from: "no-reply@" + Meteor.absoluteUrl().replace('http://', '').replace('/', ''),
+			    to: emailAddress,
+			    subject: "Uptime Monitoring: " + downtimeRecord.url + " has gone down.",
+			    text: "Unfortunately, " + downtimeRecord.url + " appears to have gone down.  Visit " + Meteor.absoluteUrl() + " for up to date information.");
+		    }
+		}
+	    }
+	    
+	    URLs.update(
+		{
+		    url: downtimeRecord.url
+		},
+		{
+		    $set: {lastEmailed: new Date()}
+		}
+	    );
+	}
+	console.log("Emailed.");
     }
 
     var cron = new Meteor.Cron({
@@ -198,7 +248,8 @@ Meteor.startup(function () {
 	    // Every minute
 	    "* * * * *": function() {
 		poll();
-		notify();
+		text();
+		email();
 	    }
 	}
     });
