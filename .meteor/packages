@@ -10,4 +10,5 @@ accounts-ui
 accounts-password
 mrt:moment
 mrt:twilio-meteor
+email
 
