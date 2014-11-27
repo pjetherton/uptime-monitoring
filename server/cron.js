@@ -226,7 +226,8 @@ Meteor.startup(function () {
 			    from: "no-reply@" + Meteor.absoluteUrl().replace('http://', '').replace('/', ''),
 			    to: emailAddress,
 			    subject: "Uptime Monitoring: " + downtimeRecord.url + " has gone down.",
-			    text: "Unfortunately, " + downtimeRecord.url + " appears to have gone down.  Visit " + Meteor.absoluteUrl() + " for up to date information.");
+			    text: "Unfortunately, " + downtimeRecord.url + " appears to have gone down.  Visit " + Meteor.absoluteUrl() + " for up to date information."
+			});
 		    }
 		}
 	    }
