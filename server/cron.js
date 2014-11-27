@@ -229,6 +229,7 @@ Meteor.startup(function () {
 			    text: "Unfortunately, " + downtimeRecord.url + " appears to have gone down.  Visit " + Meteor.absoluteUrl() + " for up to date information.",
 			    headers: {
 				"X-Mailer": "uptimeMonitorBot/0.1 (+" + Meteor.absoluteUrl() + ")"
+			    }
 			});
 		    }
 		}
