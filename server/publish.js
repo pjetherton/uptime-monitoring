@@ -7,10 +7,7 @@ Meteor.publish("urls", function () {
 
 Meteor.publish("polls", function () {
     return Polls.find({
-	$or: [
-	    {start: {$gte: new Date(new Date() - (1000 * 60 * 60))}},
-	    {statusCode: {$ne: 200}}
-	]
+	start: {$gte: new Date(new Date() - (1000 * 60 * 60))}
     });
 });
 
