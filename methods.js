@@ -8,10 +8,10 @@ Meteor.methods({
       .test(url);
   },
 
-  setMobile: function(userId, mobile) {
-    if (!Meteor.user() || !/^[+]\d{3,}$/.test(mobile)) {
+  setMobile: function(mobile) {
+    if (!this.userId || !/^[+]\d{3,}$/.test(mobile)) {
       return false;
     }
-    return Meteor.users.update(userId, {$set: {"profile.mobile": mobile}});
+    return Meteor.users.update(this.userId, {$set: {"profile.mobile": mobile}});
   }
 });
