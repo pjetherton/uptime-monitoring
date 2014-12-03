@@ -2,15 +2,15 @@
  */
 
 Meteor.publish("urls", function () {
-    return URLs.find();
+  return URLs.find();
 });
 
 Meteor.publish("polls", function () {
-    return Polls.find({
-	start: {$gte: new Date(new Date() - (1000 * 60 * 60))}
-    });
+  return Polls.find({
+    start: {$gte: new Date(new Date() - (1000 * 60 * 60))}
+  });
 });
 
 Meteor.publish("downtime", function () {
-    return Downtime.find();
+  return Downtime.find();
 });
